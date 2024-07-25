@@ -1,11 +1,16 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, ForeignKey, ForeignKeyConstraint
+from sqlalchemy import Column, Integer, String, ForeignKey, ForeignKeyConstraint, Date, Float
 import pymysql
 from passlib.hash import argon2
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-engine = create_engine('mysql+pymysql://admin:Bizerba23!@localhost/epicevents')
+
+ADMIN = os.environ['ADMIN']
+engine = create_engine(f'mysql+pymysql://admin:{ADMIN}@localhost/epicevents')
 Session = sessionmaker(bind=engine)
 session = Session()
 Base = declarative_base()
@@ -44,6 +49,20 @@ class User(Base):
 
     def __repr__(self):
         return f'User {self.name}'
+
+class Contract(Base):
+    __tablename__ = 'contracts'
+
+    id = Column(Integer, primary_key=True)
+    client_id = Column(Integer, nullable=False)
+    client_details = Column(String(50))
+    commercial = Column(String(50))
+    cost = Column(Float(30))
+    due = Column(Float(30))
+    creation_date = Column(Date)
+    status = Column(String(50))
+
+
 
 
 Base.metadata.create_all(engine)

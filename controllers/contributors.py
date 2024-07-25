@@ -1,10 +1,10 @@
-from models.models import User, Role, engine
+from models.models import User, engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import func
 import jwt
 from jwt import PyJWTError
-import datetime
 import os
+import datetime
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -32,8 +32,8 @@ session = Session()
 
 class Contributors:
 
-    def __init__(self, cli):
-        self.cli = cli
+    # def __init__(self, cli):
+    #     self.cli = cli
 
     def get_next_user_id(self):
         # Query to get the current maximum ID
@@ -46,24 +46,28 @@ class Contributors:
         # Increment the maximum ID to get the next ID
         return max_id + 1
     
-    def test(self):
-        print("regsiter part")
 
     def register_user(self, name, password, email, department):
         # Check if the username already exists
         existing_user = session.query(User).filter_by(name=name).first()
         if existing_user:
-            return 'Username already exists'
+            print('Username already exists')
         
         user_id = self.get_next_user_id()
-        
-        user = User(id=user_id, name=name, email=email, department=department)
-        # Hash the password and create a new user
-        user.set_password(password)
-        
-        # Add and commit the new user to the database
-        session.add(user)
-        session.commit()
+
+        if department not in ["commercial", "management", "support"]:
+            print("Your department must be commercial, management or support")
+
+        else:
+
+            user = User(id=user_id, name=name, email=email, department=department)
+            # Hash the password and create a new user
+            user.set_password(password)
+            
+            # Add and commit the new user to the database
+            session.add(user)
+            session.commit()
+            return True
         
         return 'User registered successfully'
 
@@ -98,16 +102,26 @@ class Contributors:
             return False
         return user
 
-    def login_user(self, email: str, password: str, SECRET_KEY:str):
+    def login_user(self, email: str, password: str):
         user = self.authenticate_user(email, password)
         if not user:
             return None
+        SECRET_KEY = os.environ['SECRET_KEY']
         access_token = self.create_access_token(data={"sub": user.email}, SECRET_KEY=SECRET_KEY)
-        return access_token
+        if access_token:
+            print(f"Access token: {access_token}")
+        else:
+            print("Login failed.")
+        payload = self.verify_access_token(access_token, SECRET_KEY=SECRET_KEY)
+        if payload:
+            print(f"Token is valid. Username: {payload.get('sub')}")
+            return True
+        else:
+            print("Invalid token.")
 
     # email = input("email: ")
     # password = input("mot de passe: ")
-    # SECRET_KEY = os.environ['SECRET_KEY']
+    # 
     # token = login_user(email, password, SECRET_KEY)
     # if token:
     #     print(f"Access token: {token}")

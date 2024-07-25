@@ -1,11 +1,13 @@
 from cli.main_cli import Cli
 from controllers.contributors import Contributors
+from controllers.contracts import Contracts
 from controllers.main_controller import MainController
 
 def main():
     menu = Cli()
-    contributors = Contributors(menu)
-    main_controller = MainController(menu, contributors)
+    contributors = Contributors()
+    contracts = Contracts()
+    main_controller = MainController(menu, contributors, contracts)
     main_controller.first_menu()
 
 
