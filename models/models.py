@@ -62,6 +62,18 @@ class Contract(Base):
     creation_date = Column(Date)
     status = Column(String(50))
 
+# class Contract(Base):
+#     __tablename__ = 'contracts'
+
+#     id = Column(Integer, primary_key=True)
+#     client_id = Column(Integer, nullable=False)
+#     client_details = Column(String(50))
+#     commercial = Column(String(50))
+#     cost = Column(Float(30))
+#     due = Column(Float(30))
+#     creation_date = Column(Date)
+#     status = Column(String(50))
+
 
 
 

@@ -32,8 +32,9 @@ session = Session()
 
 class Contributors:
 
-    # def __init__(self, cli):
-    #     self.cli = cli
+    def __init__(self):
+        self.token = 0
+
 
     def get_next_user_id(self):
         # Query to get the current maximum ID
@@ -79,20 +80,22 @@ class Contributors:
     # register_user(name, password, email, department)
 
 
-    def create_access_token(self, data: dict, SECRET_KEY):
-        to_encode = data.copy()
-        print(to_encode)
-        expire = datetime.datetime.now() + datetime.timedelta(minutes=5)
-        to_encode.update({"exp": expire})
+    def create_access_token(self, data, SECRET_KEY):
+        expire = datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=1)
+        to_encode = {"sub": data, "exp": expire}
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm="HS256")
+        self.token = encoded_jwt
         return encoded_jwt
 
-    def verify_access_token(self, token: str, SECRET_KEY):
+    def verify_access_token(self, SECRET_KEY):
         try:
-            payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+            payload = jwt.decode(self.token, SECRET_KEY, algorithms=["HS256"])
+            print("expe", datetime.datetime.fromtimestamp(payload.get("exp")))
             return payload
-        except PyJWTError:
-            return None
+        except jwt.ExpiredSignatureError:
+            # Signature has expired
+            print("expired")
+            return False
 
     def authenticate_user(self, email: str, password: str):
         user = session.query(User).filter(User.email == email).first()
@@ -107,12 +110,13 @@ class Contributors:
         if not user:
             return None
         SECRET_KEY = os.environ['SECRET_KEY']
-        access_token = self.create_access_token(data={"sub": user.email}, SECRET_KEY=SECRET_KEY)
-        if access_token:
-            print(f"Access token: {access_token}")
+        self.create_access_token(data=user.email, SECRET_KEY=SECRET_KEY)
+        
+        if self.token:
+            print(f"Access token: {self.token}")
         else:
             print("Login failed.")
-        payload = self.verify_access_token(access_token, SECRET_KEY=SECRET_KEY)
+        payload = self.verify_access_token(SECRET_KEY=SECRET_KEY)
         if payload:
             print(f"Token is valid. Username: {payload.get('sub')}")
             return True

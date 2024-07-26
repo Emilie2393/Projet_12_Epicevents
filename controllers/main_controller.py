@@ -1,3 +1,5 @@
+import os
+
 class MainController:
 
     def __init__(self, cli, contributors, contracts):
@@ -29,10 +31,22 @@ class MainController:
         choice = 0
         while choice != "1" or "2" or "3" or "4":
             choice = self.cli.summary_menu()
-            if choice == "1":
-                self.contract_menu()
-            if choice == "2":
-                self.contributors.register_user()
+            check = self.contributors.verify_access_token(os.environ['SECRET_KEY'])
+            if check:
+                print(check)
+                if choice == "1":
+                    self.contract_menu()
+                if choice == "2":
+                    self.login_menu()
+                if choice == "3":
+                    self.login_menu()
+                if choice == "4":
+                    self.login_menu()
+                if choice == "5":
+                    self.first_menu()
+            else:
+                print("Token expired")
+                self.first_menu()
     
     def contract_menu(self):
         choice = 0
