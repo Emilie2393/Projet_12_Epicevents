@@ -62,17 +62,17 @@ class Contract(Base):
     creation_date = Column(Date)
     status = Column(String(50))
 
-# class Contract(Base):
-#     __tablename__ = 'contracts'
+class Client(Base):
+    __tablename__ = 'clients'
 
-#     id = Column(Integer, primary_key=True)
-#     client_id = Column(Integer, nullable=False)
-#     client_details = Column(String(50))
-#     commercial = Column(String(50))
-#     cost = Column(Float(30))
-#     due = Column(Float(30))
-#     creation_date = Column(Date)
-#     status = Column(String(50))
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), nullable=False)
+    email = Column(String(50), primary_key=True)
+    phone = Column(Integer)
+    company = Column(String(50))
+    creation_date = Column(Date)
+    update_date = Column(Date)
+    commercial = Column(String(50))
 
 
 

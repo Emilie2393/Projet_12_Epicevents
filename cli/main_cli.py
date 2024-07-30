@@ -25,6 +25,11 @@ class Cli:
         return choice
     
     @staticmethod
+    def contract_id():
+        choice = input("Please enter the id of the contract you need to check : \n")
+        return choice
+    
+    @staticmethod
     def register_contract():
         client_id = input("Enter client id: ")
         commercial = input("Enter commercial id: ")

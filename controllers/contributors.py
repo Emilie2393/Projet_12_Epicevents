@@ -11,24 +11,6 @@ load_dotenv()
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# user = User(id=4, name="Anna", email="test@test.fr", department="commercial")
-# user.set_password('coucou')
-# print(len(user.password))
-# session.add(user)
-# session.commit()
-# print(user.department)
-# # u = session.query(User).get(3)
-# print(u.password)
-# print(u.check_password('coucou'))
-# print(u.check_password('notherightpassword'))
-
-# role1 = Role(id="management", department="management")
-# role2 = Role(id="commercial", department="commercial")
-# role3 = Role(id="support", department="support")
-# session.add(role1)
-# session.add(role2)
-# session.add(role3)
-# session.commit()
 
 class Contributors:
 
@@ -72,16 +54,9 @@ class Contributors:
         
         return 'User registered successfully'
 
-    # name = input("Entrez votre nom: ")
-    # password = input("Entrez votre mot de passe: ")
-    # email = input("Entrez votre email: ")
-    # department = input("Entrez votre departement: ")
-
-    # register_user(name, password, email, department)
-
 
     def create_access_token(self, data, SECRET_KEY):
-        expire = datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=1)
+        expire = datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=5)
         to_encode = {"sub": data, "exp": expire}
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm="HS256")
         self.token = encoded_jwt
@@ -123,17 +98,3 @@ class Contributors:
         else:
             print("Invalid token.")
 
-    # email = input("email: ")
-    # password = input("mot de passe: ")
-    # 
-    # token = login_user(email, password, SECRET_KEY)
-    # if token:
-    #     print(f"Access token: {token}")
-    # else:
-    #     print("Login failed.")
-
-    # payload = verify_access_token(token, SECRET_KEY)
-    # if payload:
-    #     print(f"Token is valid. Username: {payload.get('sub')}")
-    # else:
-    #     print("Invalid token.")

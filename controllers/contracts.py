@@ -41,4 +41,9 @@ class Contracts:
         # Add and commit the new user to the database
         session.add(contract)
         session.commit()
+    
+    def get_contract_info(self, id):
+        contract = session.query(Contract).filter(Contract.id == id).first()
+        print(contract.client_details)
+
 
