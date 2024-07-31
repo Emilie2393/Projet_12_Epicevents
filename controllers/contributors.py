@@ -2,7 +2,6 @@ from models.models import User, engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import func
 import jwt
-from jwt import PyJWTError
 import os
 import datetime
 from dotenv import load_dotenv
@@ -65,7 +64,6 @@ class Contributors:
     def verify_access_token(self, SECRET_KEY):
         try:
             payload = jwt.decode(self.token, SECRET_KEY, algorithms=["HS256"])
-            print("expe", datetime.datetime.fromtimestamp(payload.get("exp")))
             return payload
         except jwt.ExpiredSignatureError:
             # Signature has expired

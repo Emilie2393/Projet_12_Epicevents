@@ -1,4 +1,5 @@
 import os
+from .permissions import check_permission
 
 class MainController:
 
@@ -6,10 +7,6 @@ class MainController:
         self.cli = cli
         self.contributors = contributors
         self.contracts = contracts
-
-    def menu_to_execute(self, menu):
-        check = self.contributors.verify_access_token(os.environ['SECRET_KEY'])
-
             
 
     def first_menu(self):
@@ -60,8 +57,11 @@ class MainController:
             check = self.contributors.verify_access_token(os.environ['SECRET_KEY'])
             if check:
                 if choice == "1":
-                    contract_info = self.cli.register_contract()
-                    self.contracts.register_contract(contract_info[0], contract_info[1],contract_info[2],contract_info[3],contract_info[4])
+                    if check_permission(check["sub"], "autre"):
+                        contract_info = self.cli.register_contract()
+                        self.contracts.register_contract(contract_info[0], contract_info[1],contract_info[2],contract_info[3],contract_info[4])
+                    else:
+                        print("You are not allowed to do this")
                 if choice == "2":
                     contract_id = self.cli.contract_id()
                     self.contracts.get_contract_info(contract_id)
