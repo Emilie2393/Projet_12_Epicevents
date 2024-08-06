@@ -1,34 +1,14 @@
-from models.models import User, Contract, engine
+from models.models import User, Contract, engine, get_next_id, session
 from sqlalchemy import func, exists
 from sqlalchemy.orm import sessionmaker
 import datetime
 
-Session = sessionmaker(bind=engine)
-session = Session()
-
 class Contracts:
 
-    # def __init__(self, cli):
-    #     self.cli = cli
-
-    def get_next_contract_id(self):
-        # Query to get the current maximum ID
-        contract_id = session.query(exists().where(Contract.id != None)).scalar()
-        if contract_id:
-            max_id = session.query(func.max(Contract.id)).scalar()
-        else:
-            return 1
-        
-        # # If there are no users in the table, start with ID 1
-        # if max_id is None:
-        #     return 1
-        
-        # Increment the maximum ID to get the next ID
-        return max_id + 1
 
     def register_contract(self, client_id, commercial, cost, due, status):
         
-        contract_id = self.get_next_contract_id()
+        contract_id = get_next_id(Contract)
         client_details = "test"
         creation_date = datetime.date.today()
         print(creation_date)
@@ -45,5 +25,4 @@ class Contracts:
     def get_contract_info(self, id):
         contract = session.query(Contract).filter(Contract.id == id).first()
         print(contract.client_details)
-
 

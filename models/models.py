@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey, ForeignKeyConstraint, Date, Float
+from sqlalchemy import func, exists
 import pymysql
 from passlib.hash import argon2
 import os
@@ -15,6 +16,16 @@ Session = sessionmaker(bind=engine)
 session = Session()
 Base = declarative_base()
 
+def get_next_id(object):
+        # Query to get the current maximum ID
+        contract_id = session.query(exists().where(object.id != None)).scalar()
+        if contract_id:
+            max_id = session.query(func.max(object.id)).scalar()
+        else:
+            return 1
+        
+        # Increment the maximum ID to get the next ID
+        return max_id + 1
 
 class Role(Base):
     __tablename__ = 'roles'
@@ -23,7 +34,7 @@ class Role(Base):
     department = Column(String(15), nullable=False)
 
     def __repr__(self):
-        return f'Role {self.department}'
+        return f'Department {self.department}'
 
 
 class User(Base):
@@ -48,7 +59,8 @@ class User(Base):
         return argon2.verify(input, self.password)
 
     def __repr__(self):
-        return f'User {self.name}'
+        return f'{self.name}'
+
 
 class Contract(Base):
     __tablename__ = 'contracts'
@@ -56,7 +68,7 @@ class Contract(Base):
     id = Column(Integer, primary_key=True)
     client_id = Column(Integer, nullable=False)
     client_details = Column(String(50))
-    commercial = Column(String(50))
+    commercial_id = Column(Integer, ForeignKey('users.id'))
     cost = Column(Float(30))
     due = Column(Float(30))
     creation_date = Column(Date)
@@ -72,7 +84,10 @@ class Client(Base):
     company = Column(String(50))
     creation_date = Column(Date)
     update_date = Column(Date)
-    commercial = Column(String(50))
+    commercial_id = Column(String(50))
+
+    def __repr__(self):
+        return f'Client {self.name} \nEmail {self.email} \nPhone {self.phone} \nCompany {self.company} \nCreation date {self.creation_date} \nCommercial {self.commercial_id}'
 
 
 

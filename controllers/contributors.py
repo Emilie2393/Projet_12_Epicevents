@@ -1,5 +1,4 @@
-from models.models import User, engine
-from sqlalchemy.orm import sessionmaker
+from models.models import User, session, get_next_id
 from sqlalchemy import func
 import jwt
 import os
@@ -7,26 +6,11 @@ import datetime
 from dotenv import load_dotenv
 load_dotenv()
 
-Session = sessionmaker(bind=engine)
-session = Session()
-
 
 class Contributors:
 
     def __init__(self):
         self.token = 0
-
-
-    def get_next_user_id(self):
-        # Query to get the current maximum ID
-        max_id = session.query(func.max(User.id)).scalar()
-        
-        # If there are no users in the table, start with ID 1
-        if max_id is None:
-            return 1
-        
-        # Increment the maximum ID to get the next ID
-        return max_id + 1
     
 
     def register_user(self, name, password, email, department):
@@ -35,7 +19,7 @@ class Contributors:
         if existing_user:
             print('Username already exists')
         
-        user_id = self.get_next_user_id()
+        user_id = get_next_id(User)
 
         if department not in ["commercial", "management", "support"]:
             print("Your department must be commercial, management or support")

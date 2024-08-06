@@ -25,18 +25,35 @@ class Cli:
         return choice
     
     @staticmethod
-    def contract_id():
-        choice = input("Please enter the id of the contract you need to check : \n")
+    def clients_menu():
+        choice = input("Press the number associated to your choice : \n"
+                       "1 - Register a new client \n"
+                       "2 - Get a client informations \n"
+                       "3 - Update a client \n")
+        return choice
+    
+    @staticmethod
+    def object_id(object):
+        choice = input(f"Please enter the id of the {object} you need to check : \n")
         return choice
     
     @staticmethod
     def register_contract():
-        client_id = input("Enter client id: ")
+        client_id = input("Enter client's id: ")
         commercial = input("Enter commercial id: ")
         cost = input("Enter contract's cost: ")
         due = input("Enter contract's due: ")
         status = input("Enter contract's status: ")
         return client_id, commercial, cost, due, status
+    
+    @staticmethod
+    def register_client():
+        name = input("Enter client's name: ")
+        email = input("Enter client's email: ")
+        phone = input("Enter client's phone: ")
+        company = input("Enter client's company: ")
+        commercial_id = input("Enter commercial's id: ")
+        return name, email, phone, company, commercial_id
     
     @staticmethod
     def register_user():
