@@ -3,13 +3,15 @@ from controllers.contributors import Contributors
 from controllers.contracts import Contracts
 from controllers.main_controller import MainController
 from controllers.clients import Clients
+from controllers.events import Events
 
 def main():
     menu = Cli()
     contributors = Contributors()
     contracts = Contracts()
     clients = Clients()
-    main_controller = MainController(menu, contributors, contracts, clients)
+    events = Events()
+    main_controller = MainController(menu, contributors, contracts, clients, events)
     main_controller.first_menu()
 
 

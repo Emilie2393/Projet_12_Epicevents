@@ -3,12 +3,12 @@ from .permissions import check_permission
 
 class MainController:
 
-    def __init__(self, cli, contributors, contracts, clients):
+    def __init__(self, cli, contributors, contracts, clients, events):
         self.cli = cli
         self.contributors = contributors
         self.contracts = contracts
         self.clients = clients
-            
+        self.events = events
 
     def first_menu(self):
         choice = 0
@@ -42,7 +42,7 @@ class MainController:
                 if choice == "2":
                     self.clients_menu()
                 if choice == "3":
-                    self.login_menu()
+                    self.events_menu()
                 if choice == "4":
                     self.login_menu()
                 if choice == "5":
@@ -66,6 +66,10 @@ class MainController:
                 if choice == "2":
                     client_id = self.cli.object_id("client")
                     self.clients.get_client_info(client_id)
+                if choice == "3":
+                    client_id = self.cli.object_id("client")
+                    params = self.cli.client_params()
+                    self.clients.update_client(client_id, params[0], params[1])
 
             else:
                 print("Your connexion time is out, please login again")
@@ -86,9 +90,26 @@ class MainController:
                 if choice == "2":
                     contract_id = self.cli.object_id("contract")
                     self.contracts.get_contract_info(contract_id)
+                if choice == "3":
+                    contract_id = self.cli.object_id("contract")
+                    params = self.cli.contract_param()
+                    self.contracts.update_contract(contract_id, params[0], params[1])
 
             else:
                 print("Your connexion time is out, please login again")
                 self.first_menu()
 
-                
+    def events_menu(self):
+        choice = 0
+        while choice != "1" or "2" or "3":
+            choice = self.cli.events_menu()
+            check = self.contributors.verify_access_token(os.environ['SECRET_KEY'])
+            if check:
+                if choice == "1":
+                    if check_permission(check["sub"], "commercial"):
+                        event_info = self.cli.register_event()
+                        self.events.register_event(event_info[0], event_info[1], event_info[2], event_info[3], event_info[4], event_info[5], event_info[6])
+                if choice == "2":
+                    object_id = self.cli.object_id("event")
+                    self.events.get_event_info(object_id)
+

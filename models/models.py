@@ -58,36 +58,48 @@ class User(Base):
         print(self.password)
         return argon2.verify(input, self.password)
 
-    def __repr__(self):
-        return f'{self.name}'
-
-
-class Contract(Base):
-    __tablename__ = 'contracts'
-
-    id = Column(Integer, primary_key=True)
-    client_id = Column(Integer, nullable=False)
-    client_details = Column(String(50))
-    commercial_id = Column(Integer, ForeignKey('users.id'))
-    cost = Column(Float(30))
-    due = Column(Float(30))
-    creation_date = Column(Date)
-    status = Column(String(50))
 
 class Client(Base):
     __tablename__ = 'clients'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
-    email = Column(String(50), primary_key=True)
+    email = Column(String(50), nullable=False, unique=True)
     phone = Column(Integer)
     company = Column(String(50))
     creation_date = Column(Date)
     update_date = Column(Date)
-    commercial_id = Column(String(50))
+    commercial_id = Column(ForeignKey('users.id'))
 
-    def __repr__(self):
-        return f'Client {self.name} \nEmail {self.email} \nPhone {self.phone} \nCompany {self.company} \nCreation date {self.creation_date} \nCommercial {self.commercial_id}'
+
+class Contract(Base):
+    __tablename__ = 'contracts'
+
+    id = Column(Integer, primary_key=True)
+    client_id = Column(ForeignKey('clients.id'))
+    client_details = Column(String(50))
+    commercial_id = Column(ForeignKey('users.id'))
+    cost = Column(Float(30))
+    due = Column(Float(30))
+    creation_date = Column(Date)
+    status = Column(String(50))
+
+
+class Event(Base):
+    __tablename__ = 'events'
+
+    id = Column(Integer, primary_key=True)
+    contract_id = Column(ForeignKey('contracts.id'))
+    client_name = Column(String(50))
+    client_contact = Column(String(50))
+    event_start_date = Column(Date)
+    event_end_date = Column(Date)
+    support_contact_id = Column(ForeignKey('users.id'))
+    location = Column(String(50))
+    attendees = Column(Integer)
+    notes = Column(String(200))
+
+
 
 
 
