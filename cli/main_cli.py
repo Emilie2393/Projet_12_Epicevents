@@ -76,6 +76,18 @@ class Cli:
         param = input("Enter the parameter you want to update: \nclient_id\ncommercial_id\ncost\ndue\nstatus")
         new_param = input("Enter your updated data: ")
         return param, new_param
+    
+    @staticmethod
+    def event_params():
+        param = input("Enter the parameter you want to update: \nccontract_id\nevent_start_date\nevent_end_date\nsupport_contact_id\nlocation\nattendees\nnotes")
+        new_param = input("Enter your updated data: ")
+        return param, new_param
+    
+    @staticmethod
+    def user_params():
+        param = input("Enter the parameter you want to update: \nname\nemail\ndepartment\npassword")
+        new_param = input("Enter your updated data: ")
+        return param, new_param
 
     
     @staticmethod
@@ -109,3 +121,11 @@ class Cli:
         password = input("Enter your password please: ")
         department = input("Enter your department name: ")
         return name, email, password, department
+    
+    @staticmethod
+    def contributors_menu():
+        choice = input("Press the number associated to your choice : \n"
+                       "1 - Register a new contributor \n"
+                       "2 - Update a contributor \n"
+                       "3 - Delete a contributor \n")
+        return choice

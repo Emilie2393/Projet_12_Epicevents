@@ -33,5 +33,28 @@ class Events:
         support_contact = session.query(User).filter(User.id == event.support_contact_id).first()
         print(f'Contract id: {event.contract_id} \nClient name: {event.client_name} \nClient email: {event.client_contact} \
               \nEvent start date: {event.event_start_date} \nEvent end date: {event.event_end_date} \nSupport contact: {support_contact.name} \nLocation: \
-                {event.location} \nAttendees number: {event.attendees} \nEvent notes: {event.notes}')
+              {event.location} \nAttendees number: {event.attendees} \nEvent notes: {event.notes}')
+    
+    def update_event(self, id, param, new_param):
+        event = session.query(Event).filter(Event.id == id).first()
+        if event:
+            if param == 'contract_id':
+                event.contract_id = new_param
+                contract = session.query(Contract).filter(Contract.id == id).first()
+                client = session.query(Client).filter_by(id=contract.client_id).first()
+                event.client_name = client.name
+                event.client_contact = client.email
+            elif param == 'event_start_date':
+                event.event_start_date = new_param
+            elif param == 'event_end_date':
+                event.event_end_date = new_param
+            elif param == 'support_contact_id':
+                event.support_contact_id = new_param
+            elif param == 'location': 
+                event.location = new_param
+            elif param == 'attendees':
+                event.attendees = new_param
+            elif param == 'notes':
+                event.notes = new_param
+            session.commit()
 

@@ -44,12 +44,32 @@ class MainController:
                 if choice == "3":
                     self.events_menu()
                 if choice == "4":
-                    self.login_menu()
+                    if check_permission(check["sub"], "management"):
+                        self.contributors_menu()
                 if choice == "5":
                     self.first_menu()
             else:
                 print("Your connexion time is out, please login again")
                 self.first_menu()
+    
+    def contributors_menu(self):
+        choice = 0
+        while choice != "1" or "2" or "3":
+            choice = self.cli.contributors_menu()
+            check = self.contributors.verify_access_token(os.environ['SECRET_KEY'])
+            if check:
+                if choice == "1":
+                    data = self.cli.register_menu()
+                    self.contributors.register_user(data[0], data[1], data[2], data[3])
+                if choice == "2":
+                    contributor_id = self.cli.object_id("user")
+                    params = self.cli.user_params()
+                    self.contributors.update_user(contributor_id, params[0], params[1])
+                if choice == "3":
+                    contributor_id = self.cli.object_id("user")
+                    self.contributors.delete_user(contributor_id)
+
+
     
     def clients_menu(self):
         choice = 0
@@ -112,4 +132,8 @@ class MainController:
                 if choice == "2":
                     object_id = self.cli.object_id("event")
                     self.events.get_event_info(object_id)
+                if choice == "3":
+                    object_id = self.cli.object_id("event")
+                    params = self.cli.event_param()
+                    self.contracts.update_event(object_id, params[0], params[1])
 

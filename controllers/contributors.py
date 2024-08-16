@@ -1,5 +1,5 @@
 from models.models import User, session, get_next_id
-from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 import jwt
 import os
 import datetime
@@ -13,30 +13,26 @@ class Contributors:
         self.token = 0
     
 
-    def register_user(self, name, password, email, department):
+    def register_user(self, name, email, password, department):
         # Check if the username already exists
         existing_user = session.query(User).filter_by(name=name).first()
         if existing_user:
             print('Username already exists')
         
         user_id = get_next_id(User)
-
-        if department not in ["commercial", "management", "support"]:
-            print("Your department must be commercial, management or support")
-
-        else:
-
-            user = User(id=user_id, name=name, email=email, department=department)
-            # Hash the password and create a new user
-            user.set_password(password)
-            
-            # Add and commit the new user to the database
+        user = User(id=user_id, name=name, email=email, department=department)
+        # Hash the password and create a new user
+        user.set_password(password)
+        
+        # Add and commit the new user to the database
+        try:
             session.add(user)
             session.commit()
+            print('User registered successfully')
             return True
-        
-        return 'User registered successfully'
-
+        except IntegrityError as e:
+            if "department" in IntegrityError:
+                print('This department is wrong, please select commercial, support or management')
 
     def create_access_token(self, data, SECRET_KEY):
         expire = datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=5)
@@ -79,4 +75,14 @@ class Contributors:
             return True
         else:
             print("Invalid token.")
+    
+    def delete_user(self, user_id):
+        user = session.query(User).filter(User.id == user_id).first()
+        if user:
+            session.delete(user)
+            session.commit()
+            print("This contributor is now deleted")
+        else:
+            print("This user doesn't exist")
+
 
