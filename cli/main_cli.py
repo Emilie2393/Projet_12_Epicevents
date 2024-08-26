@@ -59,33 +59,32 @@ class Cli:
     @staticmethod
     def register_contract():
         client_id = input("Enter client's id: ")
-        commercial = input("Enter commercial id: ")
         cost = input("Enter contract's cost: ")
         due = input("Enter contract's due: ")
         status = input("Enter contract's status: ")
-        return client_id, commercial, cost, due, status
+        return client_id, cost, due, status
     
     @staticmethod
     def client_params():
-        param = input("Enter the parameter you want to update: \nname\nemail\nphone\ncompany\ncommercial_id")
+        param = input("Enter the parameter you want to update: \nname\nemail\nphone\ncompany\ncommercial_id\n")
         new_param = input("Enter your updated data: ")
         return param, new_param
     
     @staticmethod
     def contract_params():
-        param = input("Enter the parameter you want to update: \nclient_id\ncommercial_id\ncost\ndue\nstatus")
+        param = input("Enter the parameter you want to update: \nclient_id\ncommercial_id\ncost\ndue\nstatus\n")
         new_param = input("Enter your updated data: ")
         return param, new_param
     
     @staticmethod
     def event_params():
-        param = input("Enter the parameter you want to update: \nccontract_id\nevent_start_date\nevent_end_date\nsupport_contact_id\nlocation\nattendees\nnotes")
+        param = input("Enter the parameter you want to update: \nccontract_id\nevent_start_date\nevent_end_date\nsupport_contact_id\nlocation\nattendees\nnotes\n")
         new_param = input("Enter your updated data: ")
         return param, new_param
     
     @staticmethod
     def user_params():
-        param = input("Enter the parameter you want to update: \nname\nemail\ndepartment\npassword")
+        param = input("Enter the parameter you want to update: \nname\nemail\ndepartment\npassword\n")
         new_param = input("Enter your updated data: ")
         return param, new_param
 
@@ -96,8 +95,7 @@ class Cli:
         email = input("Enter client's email: ")
         phone = input("Enter client's phone: ")
         company = input("Enter client's company: ")
-        commercial_id = input("Enter commercial's id: ")
-        return name, email, phone, company, commercial_id
+        return name, email, phone, company
     
     @staticmethod
     def register_user():

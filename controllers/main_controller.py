@@ -1,5 +1,5 @@
 import os
-from .permissions import check_permission
+from .permissions import check_permission, check_permission_update
 
 class MainController:
 
@@ -68,8 +68,6 @@ class MainController:
                 if choice == "3":
                     contributor_id = self.cli.object_id("user")
                     self.contributors.delete_user(contributor_id)
-
-
     
     def clients_menu(self):
         choice = 0
@@ -80,7 +78,7 @@ class MainController:
                 if choice == "1":
                     if check_permission(check["sub"], "commercial"):
                         client_info = self.cli.register_client()
-                        self.clients.register_client(client_info[0], client_info[1], client_info[2], client_info[3], client_info[4])
+                        self.clients.register_client(client_info[0], client_info[1], client_info[2], client_info[3], check["sub"])
                     else:
                         print("You are not allowed to do this")
                 if choice == "2":
@@ -89,7 +87,7 @@ class MainController:
                 if choice == "3":
                     client_id = self.cli.object_id("client")
                     params = self.cli.client_params()
-                    self.clients.update_client(client_id, params[0], params[1])
+                    self.clients.update_client(client_id, params[0], params[1], check["sub"])
 
             else:
                 print("Your connexion time is out, please login again")
@@ -102,18 +100,24 @@ class MainController:
             check = self.contributors.verify_access_token(os.environ['SECRET_KEY'])
             if check:
                 if choice == "1":
-                    if check_permission(check["sub"], "commercial"):
+                    if check_permission(check["sub"], "management"):
                         contract_info = self.cli.register_contract()
-                        self.contracts.register_contract(contract_info[0], contract_info[1],contract_info[2],contract_info[3],contract_info[4])
+                        self.contracts.register_contract(contract_info[0], contract_info[1],contract_info[2],contract_info[3])
                     else:
                         print("You are not allowed to do this")
                 if choice == "2":
                     contract_id = self.cli.object_id("contract")
                     self.contracts.get_contract_info(contract_id)
                 if choice == "3":
-                    contract_id = self.cli.object_id("contract")
-                    params = self.cli.contract_param()
-                    self.contracts.update_contract(contract_id, params[0], params[1])
+                    if check_permission(check["sub"], "commercial", "management"):
+                        contract_id = self.cli.object_id("contract")
+                        if check_permission_update(check["sub"], contract_id):
+                            params = self.cli.contract_params()
+                            self.contracts.update_contract(contract_id, params[0], params[1], check["sub"])
+                        else: 
+                            print("You are not allowed to update this contract")
+                    else:
+                        print("You are not allowed to do this")
 
             else:
                 print("Your connexion time is out, please login again")
