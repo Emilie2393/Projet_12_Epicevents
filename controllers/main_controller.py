@@ -1,5 +1,5 @@
 import os
-from .permissions import check_permission, check_permission_update
+from .permissions import check_permission, check_permission_update_contract, check_permission_event_creation
 
 class MainController:
 
@@ -22,18 +22,16 @@ class MainController:
                 else:
                     print("Try again")
                     self.first_menu()
-
             if choice == "2":
-                data = self.cli.register_menu()
-                register = self.contributors.register_user(data[0], data[1], data[2], data[3])
-                if register:
-                    self.first_menu()
+                if self.contributors.first_user():
+                    data = self.cli.register_menu()
+                    self.contributors.register_user(data[0], data[1], data[2], data[3])
                 else:
-                    print("Try again")
+                    print("Please login to create a new user")
                 
     def login_menu(self):
         choice = 0
-        while choice != "1" or "2" or "3" or "4":
+        while choice != "1" or "2" or "3" or "4" or "5":
             choice = self.cli.summary_menu()
             check = self.contributors.verify_access_token(os.environ['SECRET_KEY'])
             if check:
@@ -46,6 +44,8 @@ class MainController:
                 if choice == "4":
                     if check_permission(check["sub"], "management"):
                         self.contributors_menu()
+                    else:
+                        print("You need to be in the management team to access this menu.")
                 if choice == "5":
                     self.first_menu()
             else:
@@ -68,6 +68,10 @@ class MainController:
                 if choice == "3":
                     contributor_id = self.cli.object_id("user")
                     self.contributors.delete_user(contributor_id)
+                self.login_menu()
+            else:
+                print("Your connexion time is out, please login again")
+                self.first_menu()
     
     def clients_menu(self):
         choice = 0
@@ -88,14 +92,14 @@ class MainController:
                     client_id = self.cli.object_id("client")
                     params = self.cli.client_params()
                     self.clients.update_client(client_id, params[0], params[1], check["sub"])
-
+                self.login_menu()
             else:
                 print("Your connexion time is out, please login again")
                 self.first_menu()
     
     def contract_menu(self):
         choice = 0
-        while choice != "1" or "2" or "3":
+        while choice != "1" or "2" or "3" or "4":
             choice = self.cli.contracts_menu()
             check = self.contributors.verify_access_token(os.environ['SECRET_KEY'])
             if check:
@@ -111,14 +115,17 @@ class MainController:
                 if choice == "3":
                     if check_permission(check["sub"], "commercial", "management"):
                         contract_id = self.cli.object_id("contract")
-                        if check_permission_update(check["sub"], contract_id):
+                        if check_permission_update_contract(check["sub"], contract_id):
                             params = self.cli.contract_params()
-                            self.contracts.update_contract(contract_id, params[0], params[1], check["sub"])
-                        else: 
-                            print("You are not allowed to update this contract")
+                            self.contracts.update_contract(contract_id, params[0], params[1])
+                        else:
+                            print("You are not allowed to update this contract.")
                     else:
-                        print("You are not allowed to do this")
-
+                        print("You are not allowed to do this if you are in support team.")
+                if choice == "4":
+                    params = self.cli.data_filter()
+                    self.contracts.get_contracts_filtered(params[0], params[1])
+                self.login_menu()
             else:
                 print("Your connexion time is out, please login again")
                 self.first_menu()
@@ -132,12 +139,22 @@ class MainController:
                 if choice == "1":
                     if check_permission(check["sub"], "commercial"):
                         event_info = self.cli.register_event()
-                        self.events.register_event(event_info[0], event_info[1], event_info[2], event_info[3], event_info[4], event_info[5], event_info[6])
+                        if check_permission_event_creation(check["sub"], event_info[0]):
+                            self.events.register_event(event_info[0], event_info[1], event_info[2], event_info[3], event_info[4], event_info[5], event_info[6])
+                        else:
+                            print("This contract isn't associated with your client.")
                 if choice == "2":
                     object_id = self.cli.object_id("event")
                     self.events.get_event_info(object_id)
                 if choice == "3":
-                    object_id = self.cli.object_id("event")
-                    params = self.cli.event_param()
-                    self.contracts.update_event(object_id, params[0], params[1])
+                    if check_permission(check["sub"], "management", "support"):
+                        object_id = self.cli.object_id("event")
+                        params = self.cli.event_param()
+                        self.contracts.update_event(object_id, params[0], params[1], check["sub"])
+                    else:
+                        print("You are not allowed to do this")
+                if choice == "4":
+                    params = self.cli.data_filter()
+                    self.events.get_events_filtered(params[0], params[1])
+                self.login_menu()
 

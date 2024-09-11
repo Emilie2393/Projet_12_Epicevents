@@ -10,7 +10,6 @@ class Clients:
             client_id = get_next_id(Client)
             creation_date = datetime.date.today()
             commercial = session.query(User).filter(User.email == commercial_email).first()
-            print(type(commercial.id))
             client = Client(id=client_id, name=name, email=email, phone=phone, company=company, creation_date=creation_date, commercial_id=commercial.id)
             
             # Add and commit the new client to the database
@@ -32,9 +31,11 @@ class Clients:
                     setattr(client, param, new_param)
                     client.update_date = datetime.date.today()
                     session.commit()
+                    print("This client has been updated.")
                 except Exception as error:
                     print(error)
             else:
                 print("You're not allowed to update this client")
         else:
             print("This client doesn't exist")
+    

@@ -13,7 +13,8 @@ class Cli:
                        "1 - Contracts \n"
                        "2 - Clients \n"
                        "3 - Events \n"
-                       "4 - CRM Users \n")
+                       "4 - CRM Users \n"
+                       "5 - Logout \n")
         return choice
     
     @staticmethod
@@ -21,7 +22,8 @@ class Cli:
         choice = input("Press the number associated to your choice : \n"
                        "1 - Register a new contract \n"
                        "2 - Get a contract informations \n"
-                       "3 - Update a contract \n")
+                       "3 - Update a contract \n"
+                       "4 - Filter the contracts \n")
         return choice
     
     @staticmethod
@@ -37,19 +39,25 @@ class Cli:
         choice = input("Press the number associated to your choice : \n"
                        "1 - Register a new event \n"
                        "2 - Get an event informations \n"
-                       "3 - Update an event \n")
+                       "3 - Update an event \n"
+                       "4 - Filter the events \n")
         return choice
+    
+    @staticmethod
+    def data_filter():
+        param = input("Please enter the parameter you want to filter: \n")
+        research = input("Please enter the data you want to match: \n")
+        return param, research
     
     @staticmethod
     def register_event():
         contract_id = input("Enter contract's id: ")
         event_start_date = input("Enter event start date under this format 00-00-00: ")
         event_end_date = input("Enter event end date under this format 00-00-00: ")
-        support_contact_id = input("Enter support contact id: ")
         location = input("Enter event's location: ")
         attendees = input("Enter event's attendees number: ")
         notes = input("Enter your event's notes: ")
-        return contract_id, event_start_date, event_end_date, support_contact_id, location, attendees, notes
+        return contract_id, event_start_date, event_end_date, location, attendees, notes
     
     @staticmethod
     def object_id(object):

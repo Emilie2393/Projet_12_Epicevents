@@ -57,6 +57,18 @@ class Contributors:
         if not user.check_password(password):
             return False
         return user
+    
+    def update_user(self, id, param, new_param):
+        user = session.query(User).filter(User.id == id).first()
+        if user:
+            try:
+                setattr(user, param, new_param)
+                session.commit()
+                print("This user has been correctly updated.")
+            except Exception as error:
+                print(error)
+        else:
+            print("You can't update this user, it doesn't exist.")
 
     def login_user(self, email: str, password: str):
         user = self.authenticate_user(email, password)
@@ -84,5 +96,12 @@ class Contributors:
             print("This contributor is now deleted")
         else:
             print("This user doesn't exist")
+
+    def first_user(self):
+        table = session.query(User).first()
+        if table:
+            return False
+        else:
+            return True
 
 

@@ -4,7 +4,7 @@ import datetime
 
 class Events:
 
-    def register_event(self, contract_id, start_date, end_date, support_contact_id, location, attendees, notes):
+    def register_event(self, contract_id, start_date, end_date, location, attendees, notes):
         event_id = get_next_id(Event)
         contract = session.query(Contract).filter_by(id=contract_id).first()
         client = session.query(Client).filter_by(id=contract.client_id).first()
@@ -12,49 +12,49 @@ class Events:
         client_contact = client.email
         event_start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
         event_end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
-        support_contact = session.query(User).filter_by(id=support_contact_id).first()
-        if support_contact.department != "support":
-            print("This user is not from support department, please choose another one.")
-        else:
-            event = Event(id=event_id, contract_id=contract_id, client_name=client_name, client_contact=client_contact, 
-                        event_start_date=event_start_date, event_end_date=event_end_date, support_contact_id=support_contact_id, 
-                        location=location, attendees=attendees, notes=notes)
-            try:
-                session.add(event)
-                session.commit()
-            except IntegrityError as e:
-                if "support_contact_id" in IntegrityError:
-                    print("Wrong support contact id, please try again")
-                elif "contract_id" in IntegrityError:
-                    print("Wrong contract id, please try again")
+        event = Event(id=event_id, contract_id=contract_id, client_name=client_name, client_contact=client_contact, 
+                    event_start_date=event_start_date, event_end_date=event_end_date,
+                    location=location, attendees=attendees, notes=notes)
+        try:
+            session.add(event)
+            session.commit()
+        except IntegrityError as e:
+            if "contract_id" in e:
+                print("Wrong contract id, please try again")
     
     def get_event_info(self, id):
         event = session.query(Event).filter(Event.id == id).first()
         support_contact = session.query(User).filter(User.id == event.support_contact_id).first()
         print(f'Contract id: {event.contract_id} \nClient name: {event.client_name} \nClient email: {event.client_contact} \
-              \nEvent start date: {event.event_start_date} \nEvent end date: {event.event_end_date} \nSupport contact: {support_contact.name} \nLocation: \
-              {event.location} \nAttendees number: {event.attendees} \nEvent notes: {event.notes}')
+              \nEvent start date: {event.event_start_date} \nEvent end date: {event.event_end_date} \nSupport contact: {support_contact.name} \
+              \nLocation: {event.location} \nAttendees number: {event.attendees} \nEvent notes: {event.notes} \n')
+        
+    def get_events_filtered(self, param, data):
+        result = session.query(Event).filter(getattr(Event, param) == data).all()
+        if result:
+            for i in result:
+                self.get_event_info(i.id)
+        else:
+            print("There is no parameter or data by this name")
     
-    def update_event(self, id, param, new_param):
+    def update_event(self, id, param, new_param, user_email):
         event = session.query(Event).filter(Event.id == id).first()
+        user = session.query(User).filter(User.email == user_email).first()
         if event:
-            if param == 'contract_id':
-                event.contract_id = new_param
-                contract = session.query(Contract).filter(Contract.id == id).first()
-                client = session.query(Client).filter_by(id=contract.client_id).first()
-                event.client_name = client.name
-                event.client_contact = client.email
-            elif param == 'event_start_date':
-                event.event_start_date = new_param
-            elif param == 'event_end_date':
-                event.event_end_date = new_param
-            elif param == 'support_contact_id':
-                event.support_contact_id = new_param
-            elif param == 'location': 
-                event.location = new_param
-            elif param == 'attendees':
-                event.attendees = new_param
-            elif param == 'notes':
-                event.notes = new_param
-            session.commit()
+            if user.department == "managament":
+                if param == "support_contact_id":
+                    support = session.query(User).filter_by(id=new_param).first()
+                    if support.department != "support":
+                        print("This user is not from support department, please choose another one.")
+                        return
+                else:
+                    print("You are not allowed to update something else than support_contact_id parameter.")
+                    return
+            try:
+                setattr(event, param, new_param)
+                session.commit()
+            except Exception as error:
+                print(error)
+        else:
+            print("This event doesn't exist.")
 
