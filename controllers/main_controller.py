@@ -132,7 +132,7 @@ class MainController:
 
     def events_menu(self):
         choice = 0
-        while choice != "1" or "2" or "3":
+        while choice != "1" or "2" or "3" or "4":
             choice = self.cli.events_menu()
             check = self.contributors.verify_access_token(os.environ['SECRET_KEY'])
             if check:
@@ -140,7 +140,7 @@ class MainController:
                     if check_permission(check["sub"], "commercial"):
                         event_info = self.cli.register_event()
                         if check_permission_event_creation(check["sub"], event_info[0]):
-                            self.events.register_event(event_info[0], event_info[1], event_info[2], event_info[3], event_info[4], event_info[5], event_info[6])
+                            self.events.register_event(event_info[0], event_info[1], event_info[2], event_info[3], event_info[4], event_info[5])
                         else:
                             print("This contract isn't associated with your client.")
                 if choice == "2":

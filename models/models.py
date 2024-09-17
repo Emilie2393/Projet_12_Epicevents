@@ -4,11 +4,22 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey, ForeignKeyConstraint, Date, Float
 from sqlalchemy import func, exists
 import pymysql
+import sentry_sdk
 from passlib.hash import argon2
 import os
 from dotenv import load_dotenv
 load_dotenv()
 
+sentry_sdk.init(
+    dsn="https://1471a7a48d46de5000fb0c6472585de4@o4507968058687488.ingest.de.sentry.io/4507968131366992",
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for tracing.
+    traces_sample_rate=1.0,
+    # Set profiles_sample_rate to 1.0 to profile 100%
+    # of sampled transactions.
+    # We recommend adjusting this value in production.
+    profiles_sample_rate=1.0,
+)
 
 ADMIN = os.environ['ADMIN']
 engine = create_engine(f'mysql+pymysql://admin:{ADMIN}@localhost/epicevents')
@@ -98,10 +109,6 @@ class Event(Base):
     location = Column(String(50))
     attendees = Column(Integer)
     notes = Column(String(200))
-
-
-
-
 
 
 Base.metadata.create_all(engine)
