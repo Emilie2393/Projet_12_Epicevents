@@ -112,3 +112,14 @@ class Event(Base):
 
 
 Base.metadata.create_all(engine)
+roles = session.query(exists().where(Role.id != None)).scalar()
+if not roles:
+    commercial = Role(id='commercial', department='commercial')
+    management = Role(id='management', department='management')
+    support = Role(id='support', department='support')
+    session.add(commercial)
+    session.add(management)
+    session.add(support)
+    session.commit()
+else:
+    print("role existe")

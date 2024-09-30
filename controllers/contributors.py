@@ -1,5 +1,6 @@
 from models.models import User, session, get_next_id
 from sqlalchemy.exc import IntegrityError
+from sentry_sdk import capture_message
 import jwt
 import os
 import datetime
@@ -15,7 +16,7 @@ class Contributors:
 
     def register_user(self, name, email, password, department):
         # Check if the username already exists
-        existing_user = session.query(User).filter_by(name=name).first()
+        existing_user = session.query(User).filter_by(email=email).first()
         if existing_user:
             print('Username already exists')
         
@@ -28,8 +29,7 @@ class Contributors:
         try:
             session.add(user)
             session.commit()
-            print('User registered successfully')
-            return True
+            capture_message(f'User {name} correctly created in the database.')
         except IntegrityError as e:
             if "department" in IntegrityError:
                 print('This department is wrong, please select commercial, support or management')
@@ -65,6 +65,7 @@ class Contributors:
                 setattr(user, param, new_param)
                 session.commit()
                 print("This user has been correctly updated.")
+                capture_message(f'This user has been correctly updated in the database.')
             except Exception as error:
                 print(error)
         else:

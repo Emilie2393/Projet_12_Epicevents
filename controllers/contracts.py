@@ -1,5 +1,6 @@
 from models.models import Contract, Client, User, get_next_id, session
 from sqlalchemy.exc import IntegrityError
+from sentry_sdk import capture_message
 import datetime
 
 class Contracts:
@@ -41,6 +42,8 @@ class Contracts:
         contract = session.query(Contract).filter(Contract.id == id).first()
         if contract:
             try:
+                if new_param == "signed":
+                    capture_message(f"The contract {contract.id} has been signed, congrats !")
                 setattr(contract, param, new_param)
                 session.commit()
             except Exception as error:
