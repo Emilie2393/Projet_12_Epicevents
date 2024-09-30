@@ -24,7 +24,7 @@ def check_permission_event_creation(mail, contract_id):
     contract = session.query(Contract).filter(Contract.id == contract_id).first()
     client = session.query(Client).filter(Client.id == contract.client_id).first()
     user = session.query(User).filter_by(email=mail).first()
-    if client.commercial_id == user.id:
+    if ((client.commercial_id == user.id) and (contract.status == "signed")):
         return True
     return False 
 
