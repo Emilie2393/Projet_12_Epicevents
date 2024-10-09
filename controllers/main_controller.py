@@ -23,6 +23,7 @@ class MainController:
                     print("Try again")
                     self.first_menu()
             if choice == "2":
+                # If there are no users registered for now
                 if self.contributors.first_user():
                     data = self.cli.register_menu()
                     self.contributors.register_user(data[0], data[1], data[2], data[3])

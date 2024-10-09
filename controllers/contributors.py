@@ -18,7 +18,7 @@ class Contributors:
         # Check if the username already exists
         existing_user = session.query(User).filter_by(email=email).first()
         if existing_user:
-            print('Username already exists')
+            print('User email already exists')
         
         user_id = get_next_id(User)
         user = User(id=user_id, name=name, email=email, department=department)
@@ -35,11 +35,12 @@ class Contributors:
                 print('This department is wrong, please select commercial, support or management')
 
     def create_access_token(self, data, SECRET_KEY):
+        # Set the expiration to 5 min
         expire = datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=5)
+        # User email and expiration time to set the jwt token
         to_encode = {"sub": data, "exp": expire}
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm="HS256")
         self.token = encoded_jwt
-        return encoded_jwt
 
     def verify_access_token(self, SECRET_KEY):
         try:
@@ -72,12 +73,13 @@ class Contributors:
             print("You can't update this user, it doesn't exist.")
 
     def login_user(self, email: str, password: str):
+        # Check the users table from the database
         user = self.authenticate_user(email, password)
         if not user:
             return None
+        # The secret key is set in .env file
         SECRET_KEY = os.environ['SECRET_KEY']
         self.create_access_token(data=user.email, SECRET_KEY=SECRET_KEY)
-        
         if self.token:
             print(f"Access token: {self.token}")
         else:
