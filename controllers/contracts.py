@@ -42,6 +42,9 @@ class Contracts:
         contract = session.query(Contract).filter(Contract.id == id).first()
         if contract:
             try:
+                if param == "status" and new_param not in ["signed", "payed", "to_complete"]:
+                    print("The status need to be 'signed', 'payed' or 'to_complete'")
+                    return
                 if new_param == "signed":
                     capture_message(f"The contract {contract.id} has been signed, congrats !")
                 setattr(contract, param, new_param)

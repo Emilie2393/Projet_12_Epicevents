@@ -7,15 +7,13 @@ class Clients:
 
     def register_client(self, name, email, phone, company, commercial_email):
 
-            client_id = get_next_id(Client)
-            creation_date = datetime.date.today()
-            commercial = session.query(User).filter(User.email == commercial_email).first()
-            client = Client(id=client_id, name=name, email=email, phone=phone, company=company, creation_date=creation_date, commercial_id=commercial.id)
-            
-            # Add and commit the new client to the database
-            session.add(client)
-            session.commit()
-            return True
+        client_id = get_next_id(Client)
+        creation_date = datetime.date.today()
+        commercial = session.query(User).filter(User.email == commercial_email).first()
+        client = Client(id=client_id, name=name, email=email, phone=phone, company=company, creation_date=creation_date, commercial_id=commercial.id)
+        # Add and commit the new client to the database
+        session.add(client)
+        session.commit()
     
     def get_client_info(self, id):
         client = session.query(Client).filter(Client.id == id).first()
@@ -26,6 +24,7 @@ class Clients:
         client = session.query(Client).filter(Client.id == id).first()
         commercial = session.query(User).filter(User.email == commercial_email).first()
         if client:
+            # If the commercial id match the client's commercial id
             if int(client.commercial_id) == commercial.id:
                 try:
                     setattr(client, param, new_param)

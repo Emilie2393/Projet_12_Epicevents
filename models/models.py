@@ -113,6 +113,7 @@ class Event(Base):
 
 Base.metadata.create_all(engine)
 roles = session.query(exists().where(Role.id != None)).scalar()
+
 if not roles:
     commercial = Role(id='commercial', department='commercial')
     management = Role(id='management', department='management')
@@ -121,5 +122,5 @@ if not roles:
     session.add(management)
     session.add(support)
     session.commit()
-else:
-    print("role existe")
+    print("Roles table has been created, you can now create a new contributor to begin.")
+
