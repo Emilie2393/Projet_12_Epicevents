@@ -62,11 +62,16 @@ class Contributors:
     def update_user(self, id, param, new_param):
         user = session.query(User).filter(User.id == id).first()
         if user:
+            if param == "password":
+                user.set_password(new_param)
+                session.commit()
+                print(f"{user.name}'s password has been correctly updated.")
+                return
             try:
                 setattr(user, param, new_param)
                 session.commit()
                 print("This user has been correctly updated.")
-                capture_message(f'This user has been correctly updated in the database.')
+                capture_message('This user has been correctly updated in the database.')
             except Exception as error:
                 print(error)
         else:

@@ -26,9 +26,11 @@ class Contracts:
                 print("Wrong client id, please try again")
     
     def get_contracts_filtered(self, param, data):
+        # Contract are filtered by checking the data according to the selected parameter
         result = session.query(Contract).filter(getattr(Contract, param) == data).all()
         if result:
             for i in result:
+                # Every matching contract are printed with the get_contract_info function
                 self.get_contract_info(i.id)
         else:
             print("There is no parameter or data by this name")
@@ -42,6 +44,7 @@ class Contracts:
         contract = session.query(Contract).filter(Contract.id == id).first()
         if contract:
             try:
+                # Status parameter need some checking
                 if param == "status" and new_param not in ["signed", "payed", "to_complete"]:
                     print("The status need to be 'signed', 'payed' or 'to_complete'")
                     return
@@ -52,5 +55,5 @@ class Contracts:
             except Exception as error:
                 print(error)
         else:
-            print("You can't update this contract")
+            print("This contract doesn't exist.")
     

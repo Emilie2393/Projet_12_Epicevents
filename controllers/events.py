@@ -38,10 +38,12 @@ class Events:
             print("There is no parameter or data by this name")
     
     def update_event(self, id, param, new_param, user_email):
+        # Updating events is possible only for the management team
         event = session.query(Event).filter(Event.id == id).first()
         user = session.query(User).filter(User.email == user_email).first()
         if event:
             if user.department == "managament":
+                # Management team need to select a support team member for each event
                 if param == "support_contact_id":
                     support = session.query(User).filter_by(id=new_param).first()
                     if support.department != "support":
