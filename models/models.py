@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, validates
+import re
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey, ForeignKeyConstraint, Date, Float
 from sqlalchemy import func, exists
@@ -26,6 +27,7 @@ engine = create_engine(f'mysql+pymysql://admin:{ADMIN}@localhost/epicevents')
 Session = sessionmaker(bind=engine)
 session = Session()
 Base = declarative_base()
+EMAIL_REGEX = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
 
 def get_next_id(object):
         # Query to get the current maximum ID
@@ -61,6 +63,12 @@ class User(Base):
         ForeignKeyConstraint(['department'], ['roles.id'], name='fk_users_department'),
     )
 
+    @validates('email')
+    def validate_email(self, key, email):
+        """Custom validator to check if email is in correct format."""
+        if not re.match(EMAIL_REGEX, email):
+            raise ValueError(f"Invalid email format: {email}")
+        return email
 
     def set_password(self, password):
         self.password = argon2.hash(password)

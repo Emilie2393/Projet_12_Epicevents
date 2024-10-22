@@ -29,9 +29,10 @@ class Contributors:
         try:
             session.add(user)
             session.commit()
+            print(f'User {name} correctly created in the database.')
             capture_message(f'User {name} correctly created in the database.')
         except IntegrityError as e:
-            if "department" in IntegrityError:
+            if "department" in str(e):
                 print('This department is wrong, please select commercial, support or management')
 
     def create_access_token(self, data, SECRET_KEY):
@@ -72,8 +73,9 @@ class Contributors:
                 session.commit()
                 print("This user has been correctly updated.")
                 capture_message('This user has been correctly updated in the database.')
-            except Exception as error:
-                print(error)
+            except IntegrityError as e:
+                if "department" in str(e):
+                    print('This department is wrong, please select commercial, support or management')
         else:
             print("You can't update this user, it doesn't exist.")
 
