@@ -1,6 +1,7 @@
 from models.models import User, session, get_next_id
 from sqlalchemy.exc import IntegrityError
 from sentry_sdk import capture_message
+import pymysql
 import jwt
 import os
 import datetime
@@ -15,11 +16,7 @@ class Contributors:
     
 
     def register_user(self, name, email, password, department):
-        # Check if the username already exists
-        existing_user = session.query(User).filter_by(email=email).first()
-        if existing_user:
-            print('User email already exists')
-        
+        # Create a new id following the previous one
         user_id = get_next_id(User)
         user = User(id=user_id, name=name, email=email, department=department)
         # Hash the password and create a new user
@@ -31,9 +28,14 @@ class Contributors:
             session.commit()
             print(f'User {name} correctly created in the database.')
             capture_message(f'User {name} correctly created in the database.')
-        except IntegrityError as e:
-            if "department" in str(e):
-                print('This department is wrong, please select commercial, support or management')
+        except Exception as error:
+            if "email" in (str(error).split('\n')[0]):
+                print("This email has already been used in the database. Please try again.")
+            elif "department" in (str(error).split('\n')[0]):
+                print("The department must be commercial, management or support. Please try again.")
+            else:
+                print(error)
+            session.rollback()
 
     def create_access_token(self, data, SECRET_KEY):
         # Set the expiration to 5 min

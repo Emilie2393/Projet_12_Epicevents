@@ -55,7 +55,7 @@ class User(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(30), nullable=False)
-    email = Column(String(30))
+    email = Column(String(30), nullable=False, unique=True)
     department = Column(String(15))
     password = Column(String(170), nullable=False)
 
@@ -89,6 +89,13 @@ class Client(Base):
     creation_date = Column(Date)
     update_date = Column(Date)
     commercial_id = Column(ForeignKey('users.id'))
+
+    @validates('email')
+    def validate_email(self, key, email):
+        """Custom validator to check if email is in correct format."""
+        if not re.match(EMAIL_REGEX, email):
+            raise ValueError(f"Invalid email format: {email}")
+        return email
 
 
 class Contract(Base):

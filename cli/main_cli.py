@@ -4,7 +4,7 @@ class Cli:
     def main_menu():
         choice = input("Press the number associated to login or register to access EpicEvents please : \n"
                        "1 - Login \n"
-                       "2 - Register \n")
+                       "2 - Register first user \n")
         return choice
     
     @staticmethod
@@ -122,10 +122,10 @@ class Cli:
     
     @staticmethod
     def register_menu():
-        name = input("Enter your name: ")
-        email = input("Enter your email adress please: ")
-        password = input("Enter your password please: ")
-        department = input("Enter your department name: ")
+        name = input("Enter the collaborator's name: ")
+        email = input("Enter the collaborator's email adress please: ")
+        password = input("Enter the collaborator's password please: ")
+        department = input("Enter the collaborator's department name: ")
         return name, email, password, department
     
     @staticmethod

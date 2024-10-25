@@ -12,8 +12,18 @@ class Clients:
         commercial = session.query(User).filter(User.email == commercial_email).first()
         client = Client(id=client_id, name=name, email=email, phone=phone, company=company, creation_date=creation_date, commercial_id=commercial.id)
         # Add and commit the new client to the database
-        session.add(client)
-        session.commit()
+        try:
+            session.add(client)
+            session.commit()
+            print("Your client has been correctly uploaded.")
+        except Exception as error:
+            if "email" in (str(error).split('\n')[0]):
+                print("This email has already been used in the database. Please try again.")
+            elif "phone" in (str(error).split('\n')[0]):
+                print("This phone number is not correct. Please try again.")
+            else:
+                print(error)
+            session.rollback()
     
     def get_client_info(self, id):
         client = session.query(Client).filter(Client.id == id).first()
@@ -32,7 +42,13 @@ class Clients:
                     session.commit()
                     print("This client has been updated.")
                 except Exception as error:
-                    print(error)
+                    if "email" in (str(error).split('\n')[0]):
+                        print("This email has already been used in the database. Please try again.")
+                    elif "phone" in (str(error).split('\n')[0]):
+                        print("This phone number is not correct. Please try again.")
+                    else:
+                        print(error)
+                    session.rollback()
             else:
                 print("You're not allowed to update this client")
         else:

@@ -24,6 +24,8 @@ class Contracts:
         except IntegrityError as e:
             if "client_id" in e:
                 print("Wrong client id, please try again")
+        except Exception as error:
+            print(error)
     
     def get_contracts_filtered(self, param, data):
         # Contract are filtered by checking the data according to the selected parameter
