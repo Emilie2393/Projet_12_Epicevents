@@ -1,7 +1,5 @@
-from models.models import User, session, get_next_id
-from sqlalchemy.exc import IntegrityError
+from models.models import User, Client, Contract, Event, session, get_next_id
 from sentry_sdk import capture_message
-import pymysql
 import jwt
 import os
 import datetime
@@ -30,7 +28,7 @@ class Contributors:
             capture_message(f'User {name} correctly created in the database.')
         except Exception as error:
             if "email" in (str(error).split('\n')[0]):
-                print("This email has already been used in the database. Please try again.")
+                print("This email is wrong or has already been used in the database. Please try again.")
             elif "department" in (str(error).split('\n')[0]):
                 print("The department must be commercial, management or support. Please try again.")
             else:
@@ -51,7 +49,7 @@ class Contributors:
             return payload
         except jwt.ExpiredSignatureError:
             # Signature has expired
-            print("expired")
+            print("Token has expired.")
             return False
 
     def authenticate_user(self, email: str, password: str):
@@ -66,6 +64,7 @@ class Contributors:
         user = session.query(User).filter(User.id == id).first()
         if user:
             if param == "password":
+                # The password updated need to be hached
                 user.set_password(new_param)
                 session.commit()
                 print(f"{user.name}'s password has been correctly updated.")
@@ -75,9 +74,14 @@ class Contributors:
                 session.commit()
                 print("This user has been correctly updated.")
                 capture_message('This user has been correctly updated in the database.')
-            except IntegrityError as e:
-                if "department" in str(e):
-                    print('This department is wrong, please select commercial, support or management')
+            except Exception as error:
+                if "email" in (str(error).split('\n')[0]):
+                    print("This email is wrong or is already used. Please try again.")
+                elif "department" in (str(error).split('\n')[0]):
+                    print("The department must be commercial, management or support. Please try again.")
+                else:
+                    print(error)
+                session.rollback()
         else:
             print("You can't update this user, it doesn't exist.")
 
@@ -95,7 +99,7 @@ class Contributors:
             print("Login failed.")
         payload = self.verify_access_token(SECRET_KEY=SECRET_KEY)
         if payload:
-            print(f"Token is valid. Username: {payload.get('sub')}")
+            print(f"Token is valid. User email is: {payload.get('sub')}")
             return True
         else:
             print("Invalid token.")
@@ -103,9 +107,25 @@ class Contributors:
     def delete_user(self, user_id):
         user = session.query(User).filter(User.id == user_id).first()
         if user:
+            client = session.query(Client).filter(getattr(Client, "commercial_id") == user.id).all()
+            if client:
+                for i in client:
+                    i.commercial_id = None
+                    print(f"You need to update the commercial for the client {i.name}")
+            contract = session.query(Contract).filter(getattr(Contract, "commercial_id") == user.id).all()
+            if contract:
+                for e in contract:
+                    e.commercial_id = None
+                    print(f"You need to update the commercial for the contract {e.id}")
+            event = session.query(Event).filter(getattr(Event, "support_contact_id") == user.id).all()
+            if event:
+                for f in event:
+                    f.support_contact_id = None
+                    print(f"You need to update the support contact for the event {f.id}")
             session.delete(user)
             session.commit()
             print("This contributor is now deleted")
+            
         else:
             print("This user doesn't exist")
 

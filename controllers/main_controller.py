@@ -1,5 +1,6 @@
 import os
-from .permissions import check_permission, check_permission_update_contract, check_permission_event_creation
+from .permissions import check_permission, check_permission_update_contract, check_permission_event_creation, check_permission_update_client
+from models.models import session
 
 class MainController:
 
@@ -48,6 +49,7 @@ class MainController:
                     else:
                         print("You need to be in the management team to access this menu.")
                 if choice == "5":
+                    session.close()
                     self.first_menu()
             else:
                 print("Your connexion time is out, please login again")
@@ -69,6 +71,8 @@ class MainController:
                 if choice == "3":
                     contributor_id = self.cli.object_id("user")
                     self.contributors.delete_user(contributor_id)
+                if choice == "4":
+                    self.login_menu()
                 self.login_menu()
             else:
                 print("Your connexion time is out, please login again")
@@ -90,9 +94,17 @@ class MainController:
                     client_id = self.cli.object_id("client")
                     self.clients.get_client_info(client_id)
                 if choice == "3":
-                    client_id = self.cli.object_id("client")
-                    params = self.cli.client_params()
-                    self.clients.update_client(client_id, params[0], params[1], check["sub"])
+                    if check_permission(check["sub"], "commercial"):
+                        client_id = self.cli.object_id("client")
+                        if check_permission_update_client(check["sub"], client_id):
+                            params = self.cli.client_params()
+                            self.clients.update_client(client_id, params[0], params[1])
+                        else:
+                            print("This client is not yours")
+                    else:
+                        print("You are not allowed to do this")
+                if choice == "4":
+                    self.login_menu()
                 self.login_menu()
             else:
                 print("Your connexion time is out, please login again")
@@ -126,6 +138,8 @@ class MainController:
                 if choice == "4":
                     params = self.cli.data_filter()
                     self.contracts.get_contracts_filtered(params[0], params[1])
+                if choice == "5":
+                    self.login_menu()
                 self.login_menu()
             else:
                 print("Your connexion time is out, please login again")
@@ -144,6 +158,8 @@ class MainController:
                             self.events.register_event(event_info[0], event_info[1], event_info[2], event_info[3], event_info[4], event_info[5])
                         else:
                             print("This contract isn't associated with your client.")
+                    else:
+                        print("You need to be in the commercial team to do this.")
                 if choice == "2":
                     object_id = self.cli.object_id("event")
                     self.events.get_event_info(object_id)
@@ -157,5 +173,7 @@ class MainController:
                 if choice == "4":
                     params = self.cli.data_filter()
                     self.events.get_events_filtered(params[0], params[1])
+                if choice == "5":
+                    self.login_menu()
                 self.login_menu()
 

@@ -1,5 +1,4 @@
 from models.models import Contract, Client, User, get_next_id, session, Event
-from sqlalchemy.exc import IntegrityError
 import datetime
 
 class Events:
@@ -18,16 +17,22 @@ class Events:
         try:
             session.add(event)
             session.commit()
-        except IntegrityError as e:
-            if "contract_id" in e:
+        except Exception as error:
+            if "contract_id" in (str(error).split('\n')[0]):
                 print("Wrong contract id, please try again")
+            else:
+                print(error)
+            session.rollback()
     
     def get_event_info(self, id):
         event = session.query(Event).filter(Event.id == id).first()
-        support_contact = session.query(User).filter(User.id == event.support_contact_id).first()
-        print(f'Contract id: {event.contract_id} \nClient name: {event.client_name} \nClient email: {event.client_contact} \
-              \nEvent start date: {event.event_start_date} \nEvent end date: {event.event_end_date} \nSupport contact: {support_contact.name} \
-              \nLocation: {event.location} \nAttendees number: {event.attendees} \nEvent notes: {event.notes} \n')
+        if event:
+            support_contact = session.query(User).filter(User.id == event.support_contact_id).first()
+            print(f'Contract id: {event.contract_id} \nClient name: {event.client_name} \nClient email: {event.client_contact} \
+                \nEvent start date: {event.event_start_date} \nEvent end date: {event.event_end_date} \nSupport contact: {support_contact.name} \
+                \nLocation: {event.location} \nAttendees number: {event.attendees} \nEvent notes: {event.notes} \n')
+        else:
+            print("This event doesn't exist. Please try again")
         
     def get_events_filtered(self, param, data):
         result = session.query(Event).filter(getattr(Event, param) == data).all()

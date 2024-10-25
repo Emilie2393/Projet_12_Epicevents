@@ -23,7 +23,8 @@ class Cli:
                        "1 - Register a new contract \n"
                        "2 - Get a contract informations \n"
                        "3 - Update a contract \n"
-                       "4 - Filter the contracts \n")
+                       "4 - Filter the contracts \n"
+                       "5 - Go back to the first menu \n")
         return choice
     
     @staticmethod
@@ -31,7 +32,8 @@ class Cli:
         choice = input("Press the number associated to your choice : \n"
                        "1 - Register a new client \n"
                        "2 - Get a client informations \n"
-                       "3 - Update a client \n")
+                       "3 - Update a client \n"
+                       "4 - Go back to the first menu \n")
         return choice
     
     @staticmethod
@@ -40,7 +42,8 @@ class Cli:
                        "1 - Register a new event \n"
                        "2 - Get an event informations \n"
                        "3 - Update an event \n"
-                       "4 - Filter the events \n")
+                       "4 - Filter the events \n"
+                       "5 - Go back to the first menu \n")
         return choice
     
     @staticmethod
@@ -61,7 +64,7 @@ class Cli:
     
     @staticmethod
     def object_id(object):
-        choice = input(f"Please enter the id of the {object} you need to check : \n")
+        choice = input(f"Please enter the id of the {object} you need to get : \n")
         return choice
     
     @staticmethod
@@ -133,5 +136,6 @@ class Cli:
         choice = input("Press the number associated to your choice : \n"
                        "1 - Register a new contributor \n"
                        "2 - Update a contributor \n"
-                       "3 - Delete a contributor \n")
+                       "3 - Delete a contributor \n"
+                       "4 - Go back to the first menu \n")
         return choice

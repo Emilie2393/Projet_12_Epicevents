@@ -65,7 +65,7 @@ class User(Base):
 
     @validates('email')
     def validate_email(self, key, email):
-        """Custom validator to check if email is in correct format."""
+        # Custom validator to check if email is in correct format
         if not re.match(EMAIL_REGEX, email):
             raise ValueError(f"Invalid email format: {email}")
         return email
@@ -74,7 +74,6 @@ class User(Base):
         self.password = argon2.hash(password)
 
     def check_password(self, input):
-        print(self.password)
         return argon2.verify(input, self.password)
 
 
@@ -92,7 +91,7 @@ class Client(Base):
 
     @validates('email')
     def validate_email(self, key, email):
-        """Custom validator to check if email is in correct format."""
+        # Custom validator to check if email is in correct format
         if not re.match(EMAIL_REGEX, email):
             raise ValueError(f"Invalid email format: {email}")
         return email

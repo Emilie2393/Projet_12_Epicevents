@@ -1,5 +1,4 @@
 from models.models import Contract, Client, User, get_next_id, session
-from sqlalchemy.exc import IntegrityError
 from sentry_sdk import capture_message
 import datetime
 
@@ -21,11 +20,12 @@ class Contracts:
         try:
             session.add(contract)
             session.commit()
-        except IntegrityError as e:
-            if "client_id" in e:
-                print("Wrong client id, please try again")
+            print(f"Your contract {contract.id} has been correctly created.")
         except Exception as error:
-            print(error)
+            if "client_id" in (str(error).split('\n')[0]):
+                print("Wrong client id, please try again")
+            else:
+                print(error)
     
     def get_contracts_filtered(self, param, data):
         # Contract are filtered by checking the data according to the selected parameter
@@ -39,8 +39,11 @@ class Contracts:
 
     def get_contract_info(self, id):
         contract = session.query(Contract).filter(Contract.id == id).first()
-        commercial = session.query(User).filter(User.id == contract.commercial_id).first()
-        print(f'Client id {contract.client_id} \nClient details {contract.client_details} \nCommercial {commercial.name} \nCost {contract.cost} \nDue {contract.due} \nCreation date {contract.creation_date} \nStatus {contract.status}')
+        if contract:
+            commercial = session.query(User).filter(User.id == contract.commercial_id).first()
+            print(f'Client id {contract.client_id} \nClient details {contract.client_details} \nCommercial {commercial.name} \nCost {contract.cost} \nDue {contract.due} \nCreation date {contract.creation_date} \nStatus {contract.status}')
+        else:
+            print("This contract doesn't exist. Please try again.")
 
     def update_contract(self, id, param, new_param):
         contract = session.query(Contract).filter(Contract.id == id).first()
@@ -50,12 +53,20 @@ class Contracts:
                 if param == "status" and new_param not in ["signed", "payed", "to_complete"]:
                     print("The status need to be 'signed', 'payed' or 'to_complete'")
                     return
+                if param == "commercial_id":
+                    user = session.query(User).filter(User.id == new_param).first()
+                    if user.department != "commercial":
+                        print("Please select a commercial team member.")
+                        return
                 if new_param == "signed":
                     capture_message(f"The contract {contract.id} has been signed, congrats !")
                 setattr(contract, param, new_param)
                 session.commit()
             except Exception as error:
-                print(error)
+                if "client_id" in (str(error).split('\n')[0]):
+                    print("Wrong client id, please try again")
+                else:
+                    print(error)
         else:
             print("This contract doesn't exist.")
     

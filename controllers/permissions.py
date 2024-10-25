@@ -13,6 +13,13 @@ def check_permission(mail, role, scd_role=""):
             return True
     return False
 
+def check_permission_update_client(mail, client_id):
+    client = session.query(Client).filter(Client.id == client_id).first()
+    user = session.query(User).filter_by(email=mail).first()
+    if (user.id == client.commercial_id) or not client.commercial_id:
+        return True
+    return False
+
 def check_permission_update_contract(mail, contract_id):
     contract = session.query(Contract).filter(Contract.id == contract_id).first()
     user = session.query(User).filter_by(email=mail).first()
