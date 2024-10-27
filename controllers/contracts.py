@@ -15,7 +15,6 @@ class Contracts:
             print("The status need to be 'signed', 'payed' or 'to_complete'")
             return
         contract = Contract(id=contract_id, client_id=client_id, client_details=client_details, commercial_id=client.commercial_id, cost=cost, due=due, status=status, creation_date=creation_date)
-        
         # Add and commit the new user to the database
         try:
             session.add(contract)
@@ -28,7 +27,7 @@ class Contracts:
                 print(error)
     
     def get_contracts_filtered(self, param, data):
-        # Contract are filtered by checking the data according to the selected parameter
+        # Contracts are filtered by checking the data according to the selected parameter
         result = session.query(Contract).filter(getattr(Contract, param) == data).all()
         if result:
             for i in result:

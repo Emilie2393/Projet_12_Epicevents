@@ -36,7 +36,6 @@ def get_next_id(object):
             max_id = session.query(func.max(object.id)).scalar()
         else:
             return 1
-        
         # Increment the maximum ID to get the next ID
         return max_id + 1
 
@@ -56,7 +55,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(30), nullable=False)
     email = Column(String(30), nullable=False, unique=True)
-    department = Column(String(15))
+    department = Column(String(15), nullable=False)
     password = Column(String(170), nullable=False)
 
     __table_args__ = (
@@ -83,7 +82,7 @@ class Client(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
     email = Column(String(50), nullable=False, unique=True)
-    phone = Column(Integer)
+    phone = Column(String(15))
     company = Column(String(50))
     creation_date = Column(Date)
     update_date = Column(Date)

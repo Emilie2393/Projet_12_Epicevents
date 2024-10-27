@@ -11,7 +11,6 @@ class Contributors:
 
     def __init__(self):
         self.token = 0
-    
 
     def register_user(self, name, email, password, department):
         # Create a new id following the previous one
@@ -19,7 +18,6 @@ class Contributors:
         user = User(id=user_id, name=name, email=email, department=department)
         # Hash the password and create a new user
         user.set_password(password)
-        
         # Add and commit the new user to the database
         try:
             session.add(user)
@@ -59,7 +57,7 @@ class Contributors:
         if not user.check_password(password):
             return False
         return user
-    
+
     def update_user(self, id, param, new_param):
         user = session.query(User).filter(User.id == id).first()
         if user:
@@ -70,6 +68,7 @@ class Contributors:
                 print(f"{user.name}'s password has been correctly updated.")
                 return
             try:
+                # equivalent to user.param = new_param
                 setattr(user, param, new_param)
                 session.commit()
                 print("This user has been correctly updated.")
@@ -103,10 +102,11 @@ class Contributors:
             return True
         else:
             print("Invalid token.")
-    
+
     def delete_user(self, user_id):
         user = session.query(User).filter(User.id == user_id).first()
         if user:
+            # First we delete the user id attached to client, contract and event tables
             client = session.query(Client).filter(getattr(Client, "commercial_id") == user.id).all()
             if client:
                 for i in client:
@@ -125,7 +125,6 @@ class Contributors:
             session.delete(user)
             session.commit()
             print("This contributor is now deleted")
-            
         else:
             print("This user doesn't exist")
 
@@ -135,5 +134,4 @@ class Contributors:
             return False
         else:
             return True
-
 

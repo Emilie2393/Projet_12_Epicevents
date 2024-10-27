@@ -35,6 +35,7 @@ class Events:
             print("This event doesn't exist. Please try again")
         
     def get_events_filtered(self, param, data):
+        # getattr = x.y == w to get all parameter matching the data requested 
         result = session.query(Event).filter(getattr(Event, param) == data).all()
         if result:
             for i in result:

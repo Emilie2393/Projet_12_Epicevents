@@ -57,7 +57,7 @@ class MainController:
     
     def contributors_menu(self):
         choice = 0
-        while choice != "1" or "2" or "3":
+        while choice != "1" or "2" or "3" or "4":
             choice = self.cli.contributors_menu()
             check = self.contributors.verify_access_token(os.environ['SECRET_KEY'])
             if check:
@@ -80,7 +80,7 @@ class MainController:
     
     def clients_menu(self):
         choice = 0
-        while choice != "1" or "2" or "3":
+        while choice != "1" or "2" or "3" or "4":
             choice = self.cli.clients_menu()
             check = self.contributors.verify_access_token(os.environ['SECRET_KEY'])
             if check:
@@ -112,7 +112,7 @@ class MainController:
     
     def contract_menu(self):
         choice = 0
-        while choice != "1" or "2" or "3" or "4":
+        while choice != "1" or "2" or "3" or "4" or "5":
             choice = self.cli.contracts_menu()
             check = self.contributors.verify_access_token(os.environ['SECRET_KEY'])
             if check:
@@ -147,7 +147,7 @@ class MainController:
 
     def events_menu(self):
         choice = 0
-        while choice != "1" or "2" or "3" or "4":
+        while choice != "1" or "2" or "3" or "4" or "5":
             choice = self.cli.events_menu()
             check = self.contributors.verify_access_token(os.environ['SECRET_KEY'])
             if check:
