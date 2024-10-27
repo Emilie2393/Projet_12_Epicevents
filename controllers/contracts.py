@@ -58,6 +58,7 @@ class Contracts:
                         print("Please select a commercial team member.")
                         return
                 if new_param == "signed":
+                    print(f"The contract {contract.id} has been signed, congrats !")
                     capture_message(f"The contract {contract.id} has been signed, congrats !")
                 setattr(contract, param, new_param)
                 session.commit()

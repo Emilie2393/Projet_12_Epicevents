@@ -11,8 +11,11 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+ADMIN = os.environ['ADMIN']
+SENTRY = os.environ["SENTRY"]
+
 sentry_sdk.init(
-    dsn="https://1471a7a48d46de5000fb0c6472585de4@o4507968058687488.ingest.de.sentry.io/4507968131366992",
+    dsn=f"{SENTRY}",
     # Set traces_sample_rate to 1.0 to capture 100%
     # of transactions for tracing.
     traces_sample_rate=1.0,
@@ -22,7 +25,7 @@ sentry_sdk.init(
     profiles_sample_rate=1.0,
 )
 
-ADMIN = os.environ['ADMIN']
+
 engine = create_engine(f'mysql+pymysql://admin:{ADMIN}@localhost/epicevents')
 Session = sessionmaker(bind=engine)
 session = Session()

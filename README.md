@@ -1,11 +1,12 @@
 EPICEVENTS is an ORM platform to manage events. 
 
-You need to create a MySql database named 'epicevents' first.
+You need to create a MySql database named 'epicevents' first and a Sentry account online.
 
 Then to run Epicevents app please create a .env file in the project folder and fill it like this :
 
 SECRET_KEY = put here the secret key of your choice for the token of authentication of the current user
 ADMIN = put the secret key for your mySql database according to this model : 'mysql+pymysql://admin:{ADMIN}@localhost/epicevents'
+SENTRY = put the DSN link to set up your Sentry account with Epicevents app. You will find it in the SDK Setup of your Sentry account.
 
 Copy requirements.txt with command ``pip install -r requirements.txt``
 
