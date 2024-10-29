@@ -35,7 +35,7 @@ class Contributors:
 
     def create_access_token(self, data, SECRET_KEY):
         # Set the expiration to 5 min
-        expire = datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=5)
+        expire = datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=2)
         # User email and expiration time to set the jwt token
         to_encode = {"sub": data, "exp": expire}
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm="HS256")

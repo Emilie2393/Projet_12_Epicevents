@@ -10,21 +10,24 @@ class Contracts:
         contract_id = get_next_id(Contract)
         creation_date = datetime.date.today()
         client = session.query(Client).filter_by(id=client_id).first()
-        client_details = f'{client.name}, {client.phone}, {client.email}'
-        if status not in ["signed", "payed", "to_complete"]:
-            print("The status need to be 'signed', 'payed' or 'to_complete'")
-            return
-        contract = Contract(id=contract_id, client_id=client_id, client_details=client_details, commercial_id=client.commercial_id, cost=cost, due=due, status=status, creation_date=creation_date)
-        # Add and commit the new user to the database
-        try:
-            session.add(contract)
-            session.commit()
-            print(f"Your contract {contract.id} has been correctly created.")
-        except Exception as error:
-            if "client_id" in (str(error).split('\n')[0]):
-                print("Wrong client id, please try again")
-            else:
-                print(error)
+        if client:
+            client_details = f'{client.name}, {client.phone}, {client.email}'
+            if status not in ["signed", "payed", "to_complete"]:
+                print("The status need to be 'signed', 'payed' or 'to_complete'")
+                return
+            contract = Contract(id=contract_id, client_id=client_id, client_details=client_details, commercial_id=client.commercial_id, cost=cost, due=due, status=status, creation_date=creation_date)
+            # Add and commit the new user to the database
+            try:
+                session.add(contract)
+                session.commit()
+                print(f"Your contract {contract.id} has been correctly created.")
+            except Exception as error:
+                if "client_id" in (str(error).split('\n')[0]):
+                    print("Wrong client id, please try again")
+                else:
+                    print(error)
+        else:
+            print("There is no client for this ID. Please try again.")
     
     def get_contracts_filtered(self, param, data):
         # Contracts are filtered by checking the data according to the selected parameter
