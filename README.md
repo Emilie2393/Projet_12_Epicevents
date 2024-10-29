@@ -4,6 +4,7 @@ EPICEVENTS is an ORM platform to manage events. You will be hable to handle clie
 - Commercial
 - Support
 
+  
 __You need to create a MySql database named 'epicevents' first and a Sentry account online.__
 
 Then to run Epicevents app please create a .env file in the project folder and fill it like this :  
@@ -14,8 +15,9 @@ SENTRY = put the DSN link to set up your Sentry account with Epicevents app. You
 
 Copy requirements.txt with command ``pip install -r requirements.txt``  
 
-Now you can run python main.py to launch the script.  
+Now you can run ``python main.py`` to launch the script.  
 
+  
 - Start to create a contributor from the management team to be able to create other contributors.  
 
 ![logincli](https://github.com/user-attachments/assets/0c148f67-9814-4d2d-b6a1-805df865d5a7)  
