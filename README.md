@@ -42,15 +42,15 @@ python main.py
 
 1. **Create a Management contributor** (required to add other contributors):  
 
-![First menu](../logincli.PNG)
+![First menu](./images/logincli.PNG)
 
 2. **Sales team**: create and update clients, as well as their associated contracts:  
 
-![Clients menu](../clientsmenu.png)
+![Clients menu](./images/clientsmenu.png)
 
 3. **Management team**: create and update contracts:  
 
-![Contracts menu](../contractcli.PNG)
+![Contracts menu](./images/contractcli.PNG)
 
 
 4. **Sales team**: create events for clients with signed contracts.  
