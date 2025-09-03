@@ -53,6 +53,7 @@ class MainController:
                     self.first_menu()
             else:
                 print("Your connexion time is out, please login again")
+                session.close()
                 self.first_menu()
     
     def contributors_menu(self):
@@ -76,6 +77,7 @@ class MainController:
                 self.login_menu()
             else:
                 print("Your connexion time is out, please login again")
+                session.close()
                 self.first_menu()
     
     def clients_menu(self):
@@ -108,6 +110,7 @@ class MainController:
                 self.login_menu()
             else:
                 print("Your connexion time is out, please login again")
+                session.close()
                 self.first_menu()
     
     def contract_menu(self):
@@ -143,6 +146,7 @@ class MainController:
                 self.login_menu()
             else:
                 print("Your connexion time is out, please login again")
+                session.close()
                 self.first_menu()
 
     def events_menu(self):
@@ -176,4 +180,8 @@ class MainController:
                 if choice == "5":
                     self.login_menu()
                 self.login_menu()
+            else:
+                print("Your connexion time is out, please login again")
+                session.close()
+                self.first_menu()
 

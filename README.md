@@ -1,21 +1,60 @@
-EPICEVENTS is an ORM platform to manage events. 
+# 🎉 EpicEvents  
 
-You need to create a MySql database named 'epicevents' first and a Sentry account online.
+**EpicEvents** is an ORM-based platform designed to manage **clients, contracts, and events**.  
+It also includes a role-based user system, allowing different teams within the company to collaborate efficiently:  
 
-Then to run Epicevents app please create a .env file in the project folder and fill it like this :
+- 👩‍💼 **Management**  
+- 💼 **Sales**  
+- 🛠️ **Support**  
 
-SECRET_KEY = put here the secret key of your choice for the token of authentication of the current user
-ADMIN = put the secret key for your mySql database according to this model : 'mysql+pymysql://admin:{ADMIN}@localhost/epicevents'
-SENTRY = put the DSN link to set up your Sentry account with Epicevents app. You will find it in the SDK Setup of your Sentry account.
+---
 
-Copy requirements.txt with command ``pip install -r requirements.txt``
+## ✅ Prerequisites  
+- 🗄️ Create a **MySQL database** named `epicevents`.  
+- 📊 Set up a **Sentry account** (for error tracking and monitoring).  
 
-Now you can run python main.py to launch the script.
+---
 
-- Start to create a contributor from the management team to be able to create other contributors.
-- Then you can create clients with the commercial team, update them after and update contracts attached to them.
-- After you will be able to create and update contracts with the management team.
-- Finally, you can create events with the commercial team for their clients who have signed their contract.
-- Management team affect a support collaborator to each events previously created.
-- Support team keep events correctly updated.
+## ⚙️ Configuration  
+Before running the application, create a `.env` file in the project root with the following variables:  
 
+```env
+SECRET_KEY=your_custom_secret_key   # 🔑 Authentication token secret
+ADMIN=mysql+pymysql://admin:{ADMIN}@localhost/epicevents  # 🗄️ Database connection string
+SENTRY=your_sentry_dsn              # 🌐 DSN link from your Sentry account (SDK setup section)
+```  
+
+Install dependencies:  
+```powershell
+pip install -r requirements.txt
+```  
+
+---
+
+## 🚀 Usage  
+
+Launch the application:  
+```powershell
+python main.py
+```  
+
+### 📝 Workflow  
+
+1. **Create a Management contributor** (required to add other contributors):  
+
+![First menu](../logincli.PNG)
+
+2. **Sales team**: create and update clients, as well as their associated contracts:  
+
+![Clients menu](../clientsmenu.png)
+
+3. **Management team**: create and update contracts:  
+
+![Contracts menu](../contractcli.PNG)
+
+
+4. **Sales team**: create events for clients with signed contracts.  
+5. **Management team**: assign a Support contributor to each event.  
+6. **Support team**: update and maintain event details.  
+
+---
