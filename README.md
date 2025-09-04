@@ -16,7 +16,7 @@ It also includes a role-based user system, allowing different teams within the c
 ---
 
 ## ⚙️ Configuration  
-Before running the application, create a `.env` file in the project root with the following variables:  
+1. Before running the application, create a `.env` file in the project root with the following variables:  
 
 ```env
 SECRET_KEY=your_custom_secret_key   # 🔑 Authentication token secret
@@ -26,7 +26,14 @@ SENTRY=your_sentry_dsn              # 🌐 DSN link from your Sentry account (SD
 
 The SECRET_KEY variable is useful for the authentication function. It acts as an encryption/signing key to generate and validate the access token.  
 
-Install dependencies:  
+2. Create and activate your virtual environment:
+
+```powershell
+python -m venv venv
+.\venv\Scripts\activate
+```
+
+3. Install dependencies:  
 ```powershell
 pip install -r requirements.txt
 ```  
