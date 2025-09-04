@@ -24,6 +24,8 @@ ADMIN=mysql+pymysql://admin:{ADMIN}@localhost/epicevents  # 🗄️ Database con
 SENTRY=your_sentry_dsn              # 🌐 DSN link from your Sentry account (SDK setup section)
 ```  
 
+The SECRET_KEY variable is useful for the authentication function. It acts as an encryption/signing key to generate and validate the access token.  
+
 Install dependencies:  
 ```powershell
 pip install -r requirements.txt
