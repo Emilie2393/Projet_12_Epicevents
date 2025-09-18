@@ -10,6 +10,7 @@ It also includes a role-based user system, allowing different teams within the c
 ---
 
 ## ✅ Prerequisites  
+- 🐍 Have Python 3.12 or under installed. Python 3.13 may have some errors during the requirements installation.  
 - 🗄️ Create a **MySQL database** named `epicevents`.  
 - 📊 Set up a **Sentry account** (for error tracking and monitoring).  
 
@@ -19,12 +20,18 @@ It also includes a role-based user system, allowing different teams within the c
 1. Before running the application, create a `.env` file in the project root with the following variables:  
 
 ```env
-SECRET_KEY=your_custom_secret_key   # 🔑 Authentication token secret
-ADMIN=mysql+pymysql://admin:{ADMIN}@localhost/epicevents  # 🗄️ Database connection string
-SENTRY=your_sentry_dsn              # 🌐 DSN link from your Sentry account (SDK setup section)
+SECRET_KEY=your_custom_secret_key   # 🔑 Authentication token secret  
+ADMIN=your_mysql_admin_name  # 🗄️ The admin name of your MySql database  
+PASSWORD=your_mysql_password  # the password you choose for your MySql admin account  
+SENTRY=your_sentry_dsn              # 🌐 DSN link from your Sentry account (SDK setup section)  
 ```  
 
 The SECRET_KEY variable is useful for the authentication function. It acts as an encryption/signing key to generate and validate the access token.  
+You can check for your ADMIN name with this command:  
+
+```mysql
+SELECT User, Host FROM mysql.user;
+```  
 
 2. Create and activate your virtual environment:
 

@@ -11,6 +11,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+PASSWORD = os.environ['PASSWORD']
 ADMIN = os.environ['ADMIN']
 SENTRY = os.environ["SENTRY"]
 
@@ -26,7 +27,7 @@ sentry_sdk.init(
 )
 
 
-engine = create_engine(f'mysql+pymysql://admin:{ADMIN}@localhost/epicevents')
+engine = create_engine(f'mysql+pymysql://{ADMIN}:{PASSWORD}@localhost/epicevents')
 Session = sessionmaker(bind=engine)
 session = Session()
 Base = declarative_base()
