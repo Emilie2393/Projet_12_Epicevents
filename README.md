@@ -27,7 +27,7 @@ SENTRY=your_sentry_dsn              # 🌐 DSN link from your Sentry account (SD
 ```  
 
 The SECRET_KEY variable is useful for the authentication function. It acts as an encryption/signing key to generate and validate the access token.  
-You can check for your ADMIN name with this command:  
+You can check for your ADMIN name with this MySql command:  
 
 ```mysql
 SELECT User, Host FROM mysql.user;
